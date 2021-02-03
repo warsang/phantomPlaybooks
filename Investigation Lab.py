@@ -57,7 +57,7 @@ def domain_reputation_2(action=None, success=None, container=None, results=None,
                 'context': {'artifact_id': container_item[1]},
             })
 
-    phantom.act(action="domain reputation", parameters=parameters, assets=['virustotal'], callback=join_high_positives, name="domain_reputation_2", parent_action=action)
+    phantom.act(action="domain reputation", parameters=parameters, assets=['virustotal'], callback=join_high_positives, name="domain_reputation_2")
 
     return
 
@@ -78,7 +78,7 @@ def file_reputation_1(action=None, success=None, container=None, results=None, h
                 'context': {'artifact_id': container_item[1]},
             })
 
-    phantom.act(action="file reputation", parameters=parameters, assets=['virustotal'], callback=join_high_positives, name="file_reputation_1", parent_action=action)
+    phantom.act(action="file reputation", parameters=parameters, assets=['virustotal'], callback=join_high_positives, name="file_reputation_1")
 
     return
 
@@ -217,7 +217,7 @@ def Event_promote(action=None, success=None, container=None, results=None, handl
 
     # call connected blocks if condition 1 matched
     if matched:
-        Promote_to_Case(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
+        add_artifact_1(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
         return
 
     # call connected blocks for 'else' condition 2
@@ -305,6 +305,32 @@ def Promote_to_Case(action=None, success=None, container=None, results=None, han
     
     # call playbook "phantomPlaybooks/Case Promotion Lab", returns the playbook_run_id
     playbook_run_id = phantom.playbook(playbook="phantomPlaybooks/Case Promotion Lab", container=container, name="Promote_to_Case")
+
+    return
+
+def add_artifact_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('add_artifact_1() called')
+        
+    #phantom.debug('Action: {0} {1}'.format(action['name'], ('SUCCEEDED' if success else 'FAILED')))
+    
+    # collect data for 'add_artifact_1' call
+
+    parameters = []
+    
+    # build parameters list for 'add_artifact_1' call
+    parameters.append({
+        'name': "Promote Reason",
+        'container_id': "",
+        'label': "event",
+        'source_data_identifier': "Investigation lab",
+        'cef_name': "reason",
+        'cef_value': "the text message entered by the IT team in the user prompt",
+        'cef_dictionary': "",
+        'contains': "",
+        'run_automation': False,
+    })
+
+    phantom.act(action="add artifact", parameters=parameters, assets=['phantom'], callback=Promote_to_Case, name="add_artifact_1")
 
     return
 
