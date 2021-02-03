@@ -17,7 +17,7 @@ def promote_to_case_1(action=None, success=None, container=None, results=None, h
     phantom.debug('promote_to_case_1() called')
 
     phantom.promote(container=container, template="Data Breach")
-    Fixed_sourceDNS(container=container)
+    filter_4(container=container)
 
     return
 
@@ -80,7 +80,8 @@ def format_1(action=None, success=None, container=None, results=None, handle=Non
 Case link: {0}
 {5}{4}{3}{2}{1}Event Name: {1} Description: {2}
 Source URL: {3}
-Target Server IP: {4} Suspicious File Path: {5}"""
+Target Server IP: {4} Suspicious File Path: {5}
+Reason: {6}"""
 
     # parameter list for template variable replacement
     parameters = [
@@ -90,6 +91,7 @@ Target Server IP: {4} Suspicious File Path: {5}"""
         "filtered-data:Fixed_sourceDNS:condition_1:artifact:*.cef.sourceDnsDomain",
         "filtered-data:Fixed_Address:condition_1:artifact:*.cef.destinationAddress",
         "filtered-data:Fixed_File_Path:condition_1:artifact:*.cef.filePath",
+        "filtered-data:filter_4:condition_1:artifact:*.cef.reason",
     ]
 
     phantom.format(container=container, template=template, parameters=parameters, name="format_1")
@@ -108,17 +110,34 @@ def send_email_1(action=None, success=None, container=None, results=None, handle
     
     # build parameters list for 'send_email_1' call
     parameters.append({
-        'from': "edu-labserver@splunk.com",
-        'to': "warsang@amazon.com",
         'cc': "",
+        'to': "warsang@amazon.com",
         'bcc': "",
-        'subject': "New Case Created",
         'body': formatted_data_1,
-        'attachments': "",
+        'from': "edu-labserver@splunk.com",
         'headers': "",
+        'subject': "New Case Created",
+        'attachments': "",
     })
 
     phantom.act(action="send email", parameters=parameters, assets=['smtp'], name="send_email_1")
+
+    return
+
+def filter_4(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('filter_4() called')
+
+    # collect filtered artifact ids for 'if' condition 1
+    matched_artifacts_1, matched_results_1 = phantom.condition(
+        container=container,
+        conditions=[
+            ["artifact:*.cef.reason.", "!=", ""],
+        ],
+        name="filter_4:condition_1")
+
+    # call connected blocks if filtered artifacts or results
+    if matched_artifacts_1 or matched_results_1:
+        Fixed_sourceDNS(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_1, filtered_results=matched_results_1)
 
     return
 
