@@ -7,149 +7,9 @@
             "clean": true,
             "code_block": "",
             "description": "Investigation Lab Playbook",
-            "hash": "3bb67404c7d7656c80eb1965aa4e9e98e5f2e62d",
+            "hash": "2aa77bc79e9830b6b7983493ac2f2e6c90a6e7d3",
             "joint": {
                 "cells": [
-                    {
-                        "0": "E",
-                        "1": "N",
-                        "2": "D",
-                        "active": false,
-                        "angle": 0,
-                        "attrs": {
-                            ".background": {
-                                "fill": "#000000",
-                                "stroke": "#5C6773"
-                            },
-                            ".color-band": {
-                                "fill": "#3C444D"
-                            },
-                            ".inPorts>.port-in": {
-                                "ref": ".background",
-                                "ref-x": 0.5
-                            },
-                            ".inPorts>.port-in>.port-body": {
-                                "port": {
-                                    "id": "in",
-                                    "type": "in"
-                                }
-                            },
-                            ".title": {
-                                "text": "END"
-                            },
-                            "g.delete": {
-                                "display": "none"
-                            },
-                            "g.error": {
-                                "opacity": 0
-                            },
-                            "g.icon image": {
-                                "xlink:href": "/inc/coa/img/block_icon_end.svg"
-                            },
-                            "g.notes": {
-                                "display": "block"
-                            }
-                        },
-                        "block_code": "def on_finish(container, summary):\n    phantom.debug('on_finish() called')\n    # This function is called after all actions are completed.\n    # summary of all the action and/or all details of actions\n    # can be collected here.\n\n    # summary_json = phantom.get_summary()\n    # if 'result' in summary_json:\n        # for action_result in summary_json['result']:\n            # if 'action_run_id' in action_result:\n                # action_results = phantom.get_action_results(action_run_id=action_result['action_run_id'], result_data=False, flatten=False)\n                # phantom.debug(action_results)\n\n    return",
-                        "callback_code": "# read-only block view not available",
-                        "callback_start": 1,
-                        "callsback": false,
-                        "connected_to_start": true,
-                        "connection_name": "",
-                        "connection_type": "",
-                        "custom_callback": "",
-                        "custom_code": "",
-                        "custom_join": "",
-                        "custom_name": "",
-                        "description": "",
-                        "has_custom": false,
-                        "has_custom_block": false,
-                        "has_custom_callback": false,
-                        "has_custom_join": false,
-                        "id": "fa80eab3-2606-4d55-a302-119ed5bf24be",
-                        "inPorts": [
-                            "in"
-                        ],
-                        "join_code": "# read-only block view not available",
-                        "join_optional": [],
-                        "join_start": 1,
-                        "line_end": 50,
-                        "line_start": 37,
-                        "name": "",
-                        "notes": "",
-                        "number": 0,
-                        "order": 3,
-                        "outPorts": [],
-                        "ports": {
-                            "groups": {
-                                "in": {
-                                    "attrs": {
-                                        ".port-body": {
-                                            "fill": "#fff",
-                                            "magnet": true,
-                                            "r": 10,
-                                            "stroke": "#000"
-                                        },
-                                        ".port-label": {
-                                            "fill": "#000"
-                                        }
-                                    },
-                                    "label": {
-                                        "position": {
-                                            "args": {
-                                                "y": 10
-                                            },
-                                            "name": "left"
-                                        }
-                                    },
-                                    "position": {
-                                        "name": "left"
-                                    }
-                                },
-                                "out": {
-                                    "attrs": {
-                                        ".port-body": {
-                                            "fill": "#fff",
-                                            "magnet": true,
-                                            "r": 10,
-                                            "stroke": "#000"
-                                        },
-                                        ".port-label": {
-                                            "fill": "#000"
-                                        }
-                                    },
-                                    "label": {
-                                        "position": {
-                                            "args": {
-                                                "y": 10
-                                            },
-                                            "name": "right"
-                                        }
-                                    },
-                                    "position": {
-                                        "name": "right"
-                                    }
-                                }
-                            }
-                        },
-                        "position": {
-                            "x": 640,
-                            "y": 100
-                        },
-                        "previous_function": "",
-                        "previous_name": "",
-                        "show_number": true,
-                        "size": {
-                            "height": 54,
-                            "width": 80
-                        },
-                        "state": "end",
-                        "status": "",
-                        "title": "END",
-                        "type": "coa.StartEnd",
-                        "warn": false,
-                        "z": 2
-                    },
                     {
                         "0": "S",
                         "1": "T",
@@ -333,6 +193,45 @@
                         },
                         "type": "link",
                         "z": 4
+                    },
+                    {
+                        "attrs": {
+                            ".connection": {
+                                "stroke": "#818D99",
+                                "stroke-width": 2
+                            },
+                            ".marker-target": {
+                                "d": "M 10 0 L 0 5 L 10 10 z",
+                                "fill": "#818D99",
+                                "stroke": "#818D99"
+                            }
+                        },
+                        "connector": {
+                            "args": {
+                                "radius": 5
+                            },
+                            "name": "rounded"
+                        },
+                        "endDirections": [
+                            "left"
+                        ],
+                        "id": "c7ccc6a4-e655-4298-a5ad-8ad1c85465dc",
+                        "router": {
+                            "name": "metro"
+                        },
+                        "source": {
+                            "id": "5ca04116-b159-4a76-9de7-2cbd8c5a5f1c",
+                            "selector": "> g:nth-child(1) > g:nth-child(2) > g:nth-child(1) > circle:nth-child(1)"
+                        },
+                        "startDirections": [
+                            "right"
+                        ],
+                        "target": {
+                            "id": "fa80eab3-2606-4d55-a302-119ed5bf24be",
+                            "selector": "> g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > circle:nth-child(1)"
+                        },
+                        "type": "link",
+                        "z": 9
                     },
                     {
                         "action": "geolocate ip",
@@ -585,6 +484,10 @@
                             ".title": {
                                 "text": "Investigate"
                             },
+                            "g.code image": {
+                                "opacity": 1,
+                                "xlink:href": "/inc/coa/img/block_icon_code_dark_on.svg"
+                            },
                             "g.delete": {
                                 "display": "none"
                             },
@@ -613,13 +516,13 @@
                         "connection_name": "",
                         "connection_type": "",
                         "custom_callback": "",
-                        "custom_code": "",
+                        "custom_code": "def geolocate_ip_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):\n    phantom.debug('geolocate_ip_1() called')\n\n    # collect data for 'geolocate_ip_1' call\n    container_data = phantom.collect2(container=container, datapath=['artifact:*.cef.sourceAddress', 'artifact:*.id'])\n\n    parameters = []\n    \n    # build parameters list for 'geolocate_ip_1' call\n    for container_item in container_data:\n        if container_item[0]:\n            parameters.append({\n                'ip': container_item[0],\n                # context (artifact id) is added to associate results with the artifact\n                'context': {'artifact_id': container_item[1]},\n            })\n            \n    phantom.debug(parameters)\n    phantom.act(action=\"geolocate ip\", parameters=parameters, assets=['maxmind'], name=\"geolocate_ip_1\")\n\n    return",
                         "custom_join": "",
                         "custom_name": "",
                         "delay": "0",
                         "description": "",
                         "has_custom": false,
-                        "has_custom_block": false,
+                        "has_custom_block": true,
                         "has_custom_callback": false,
                         "has_custom_join": false,
                         "id": "5ca04116-b159-4a76-9de7-2cbd8c5a5f1c",
@@ -629,7 +532,7 @@
                         "join_code": "",
                         "join_optional": [],
                         "join_start": 1,
-                        "line_end": 37,
+                        "line_end": 38,
                         "line_start": 16,
                         "message": "Configuring now",
                         "name": "geolocate ip",
@@ -710,8 +613,154 @@
                         "status": "",
                         "title": "Investigate",
                         "type": "coa.Action",
-                        "warn": "",
-                        "z": 5
+                        "warn": false,
+                        "z": 11
+                    },
+                    {
+                        "0": "E",
+                        "1": "N",
+                        "2": "D",
+                        "active": false,
+                        "angle": 0,
+                        "attrs": {
+                            ".background": {
+                                "fill": "#000000",
+                                "stroke": "#5C6773"
+                            },
+                            ".color-band": {
+                                "fill": "#3C444D"
+                            },
+                            ".inPorts>.port-in": {
+                                "ref": ".background",
+                                "ref-x": 0.5
+                            },
+                            ".inPorts>.port-in>.port-body": {
+                                "port": {
+                                    "id": "in",
+                                    "type": "in"
+                                }
+                            },
+                            ".title": {
+                                "text": "END"
+                            },
+                            "g.code image": {
+                                "xlink:href": "/inc/coa/img/block_icon_code_dark_on.svg"
+                            },
+                            "g.delete": {
+                                "display": "none"
+                            },
+                            "g.error": {
+                                "opacity": 0
+                            },
+                            "g.error image": {
+                                "xlink:href": "/inc/coa/img/block_icon_error.svg"
+                            },
+                            "g.icon image": {
+                                "xlink:href": "/inc/coa/img/block_icon_end.svg"
+                            },
+                            "g.notes": {
+                                "display": "block"
+                            }
+                        },
+                        "block_code": "def on_finish(container, summary):\n    phantom.debug('on_finish() called')\n    # This function is called after all actions are completed.\n    # summary of all the action and/or all details of actions\n    # can be collected here.\n\n    # summary_json = phantom.get_summary()\n    # if 'result' in summary_json:\n        # for action_result in summary_json['result']:\n            # if 'action_run_id' in action_result:\n                # action_results = phantom.get_action_results(action_run_id=action_result['action_run_id'], result_data=False, flatten=False)\n                # phantom.debug(action_results)\n\n    return",
+                        "callback_code": "# read-only block view not available",
+                        "callback_start": 1,
+                        "callsback": false,
+                        "connected_to_start": true,
+                        "connection_name": "geolocate ip",
+                        "connection_type": "action",
+                        "custom_callback": "",
+                        "custom_code": "def on_finish(container, summary):\n    phantom.debug('on_finish() called')\n    # This function is called after all actions are completed.\n    # summary of all the action and/or all details of actions\n    # can be collected here.\n\n    summary_json = phantom.get_summary()\n    if 'result' in summary_json:\n         for action_result in summary_json['result']:\n             if 'action_run_id' in action_result:\n                 action_results = phantom.get_action_results(action_run_id=action_result['action_run_id'], result_data=False, flatten=False)\n                 phantom.debug(action_results)\n\n    return",
+                        "custom_join": "",
+                        "custom_name": "",
+                        "description": "",
+                        "has_custom": false,
+                        "has_custom_block": true,
+                        "has_custom_callback": false,
+                        "has_custom_join": false,
+                        "id": "fa80eab3-2606-4d55-a302-119ed5bf24be",
+                        "inPorts": [
+                            "in"
+                        ],
+                        "join_code": "# read-only block view not available",
+                        "join_optional": [],
+                        "join_start": 1,
+                        "line_end": 51,
+                        "line_start": 38,
+                        "name": "",
+                        "notes": "",
+                        "number": 0,
+                        "order": 3,
+                        "outPorts": [],
+                        "ports": {
+                            "groups": {
+                                "in": {
+                                    "attrs": {
+                                        ".port-body": {
+                                            "fill": "#fff",
+                                            "magnet": true,
+                                            "r": 10,
+                                            "stroke": "#000"
+                                        },
+                                        ".port-label": {
+                                            "fill": "#000"
+                                        }
+                                    },
+                                    "label": {
+                                        "position": {
+                                            "args": {
+                                                "y": 10
+                                            },
+                                            "name": "left"
+                                        }
+                                    },
+                                    "position": {
+                                        "name": "left"
+                                    }
+                                },
+                                "out": {
+                                    "attrs": {
+                                        ".port-body": {
+                                            "fill": "#fff",
+                                            "magnet": true,
+                                            "r": 10,
+                                            "stroke": "#000"
+                                        },
+                                        ".port-label": {
+                                            "fill": "#000"
+                                        }
+                                    },
+                                    "label": {
+                                        "position": {
+                                            "args": {
+                                                "y": 10
+                                            },
+                                            "name": "right"
+                                        }
+                                    },
+                                    "position": {
+                                        "name": "right"
+                                    }
+                                }
+                            }
+                        },
+                        "position": {
+                            "x": 640,
+                            "y": 100
+                        },
+                        "previous_function": "",
+                        "previous_name": "",
+                        "show_number": true,
+                        "size": {
+                            "height": 54,
+                            "width": 80
+                        },
+                        "state": "end",
+                        "status": "",
+                        "title": "END",
+                        "type": "coa.StartEnd",
+                        "warn": false,
+                        "z": 12
                     }
                 ]
             },
@@ -721,7 +770,7 @@
         "schema": 4,
         "version": "4.10.0.40961"
     },
-    "create_time": "2021-02-03T15:49:37.702701+00:00",
+    "create_time": "2021-02-03T15:56:42.783007+00:00",
     "draft_mode": false,
     "labels": [
         "*"

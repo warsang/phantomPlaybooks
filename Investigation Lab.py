@@ -29,7 +29,8 @@ def geolocate_ip_1(action=None, success=None, container=None, results=None, hand
                 # context (artifact id) is added to associate results with the artifact
                 'context': {'artifact_id': container_item[1]},
             })
-
+            
+    phantom.debug(parameters)
     phantom.act(action="geolocate ip", parameters=parameters, assets=['maxmind'], name="geolocate_ip_1")
 
     return
@@ -40,11 +41,11 @@ def on_finish(container, summary):
     # summary of all the action and/or all details of actions
     # can be collected here.
 
-    # summary_json = phantom.get_summary()
-    # if 'result' in summary_json:
-        # for action_result in summary_json['result']:
-            # if 'action_run_id' in action_result:
-                # action_results = phantom.get_action_results(action_run_id=action_result['action_run_id'], result_data=False, flatten=False)
-                # phantom.debug(action_results)
+    summary_json = phantom.get_summary()
+    if 'result' in summary_json:
+         for action_result in summary_json['result']:
+             if 'action_run_id' in action_result:
+                 action_results = phantom.get_action_results(action_run_id=action_result['action_run_id'], result_data=False, flatten=False)
+                 phantom.debug(action_results)
 
     return
