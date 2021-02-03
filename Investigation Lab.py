@@ -7,6 +7,30 @@ import json
 from datetime import datetime, timedelta
 def on_start(container):
     phantom.debug('on_start() called')
+    
+    # call 'geolocate_ip_1' block
+    geolocate_ip_1(container=container)
+
+    return
+
+def geolocate_ip_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('geolocate_ip_1() called')
+
+    # collect data for 'geolocate_ip_1' call
+    container_data = phantom.collect2(container=container, datapath=['artifact:*.cef.sourceAddress', 'artifact:*.id'])
+
+    parameters = []
+    
+    # build parameters list for 'geolocate_ip_1' call
+    for container_item in container_data:
+        if container_item[0]:
+            parameters.append({
+                'ip': container_item[0],
+                # context (artifact id) is added to associate results with the artifact
+                'context': {'artifact_id': container_item[1]},
+            })
+
+    phantom.act(action="geolocate ip", parameters=parameters, assets=['maxmind'], name="geolocate_ip_1")
 
     return
 
