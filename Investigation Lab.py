@@ -98,7 +98,7 @@ def high_positives(action=None, success=None, container=None, results=None, hand
 
     # call connected blocks if condition 1 matched
     if matched:
-        prompt_1(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
+        Filter_destination_ip_null_values(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
         return
 
     # call connected blocks for 'else' condition 2
@@ -116,8 +116,11 @@ def join_high_positives(action=None, success=None, container=None, results=None,
     
     return
 
-def prompt_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug('prompt_1() called')
+"""
+Prompts IT to promote to case
+"""
+def Notify_IT(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Notify_IT() called')
     
     # set user and message variables for phantom.prompt call
     user = "Administrator"
@@ -142,7 +145,28 @@ def prompt_1(action=None, success=None, container=None, results=None, handle=Non
         },
     ]
 
-    phantom.prompt2(container=container, user=user, message=message, respond_in_mins=30, name="prompt_1", parameters=parameters, response_types=response_types)
+    phantom.prompt2(container=container, user=user, message=message, respond_in_mins=30, name="Notify_IT", parameters=parameters, response_types=response_types)
+
+    return
+
+"""
+Filter destination ip null values
+"""
+def Filter_destination_ip_null_values(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Filter_destination_ip_null_values() called')
+
+    # collect filtered artifact ids for 'if' condition 1
+    matched_artifacts_1, matched_results_1 = phantom.condition(
+        container=container,
+        action_results=results,
+        conditions=[
+            ["artifact:*.cef.destinationAddress", "!=", ""],
+        ],
+        name="Filter_destination_ip_null_values:condition_1")
+
+    # call connected blocks if filtered artifacts or results
+    if matched_artifacts_1 or matched_results_1:
+        Notify_IT(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_1, filtered_results=matched_results_1)
 
     return
 
