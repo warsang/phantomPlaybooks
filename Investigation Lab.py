@@ -101,8 +101,6 @@ def high_positives(action=None, success=None, container=None, results=None, hand
         Filter_destination_ip_null_values(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
         return
 
-    # call connected blocks for 'else' condition 2
-
     return
 
 def join_high_positives(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None):
@@ -145,7 +143,7 @@ def Notify_IT(action=None, success=None, container=None, results=None, handle=No
         },
     ]
 
-    phantom.prompt2(container=container, user=user, message=message, respond_in_mins=30, name="Notify_IT", parameters=parameters, response_types=response_types)
+    phantom.prompt2(container=container, user=user, message=message, respond_in_mins=30, name="Notify_IT", parameters=parameters, response_types=response_types, callback=Prompt_timeout)
 
     return
 
@@ -167,6 +165,44 @@ def Filter_destination_ip_null_values(action=None, success=None, container=None,
     # call connected blocks if filtered artifacts or results
     if matched_artifacts_1 or matched_results_1:
         Notify_IT(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_1, filtered_results=matched_results_1)
+
+    return
+
+"""
+Decision block for prompt timeout
+"""
+def Prompt_timeout(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Prompt_timeout() called')
+
+    # check for 'if' condition 1
+    matched = phantom.decision(
+        container=container,
+        action_results=results,
+        conditions=[
+            ["Notify_IT:action_result.status", "==", "\"success\""],
+        ])
+
+    # call connected blocks if condition 1 matched
+    if matched:
+        decision_3(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
+        return
+
+    return
+
+def decision_3(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('decision_3() called')
+
+    # check for 'if' condition 1
+    matched = phantom.decision(
+        container=container,
+        action_results=results,
+        conditions=[
+            ["Notify_IT:action_result.summary.responses.0", "==", "\"Yes\""],
+        ])
+
+    # call connected blocks if condition 1 matched
+    if matched:
+        return
 
     return
 
