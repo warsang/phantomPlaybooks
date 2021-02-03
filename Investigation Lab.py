@@ -101,6 +101,9 @@ def high_positives(action=None, success=None, container=None, results=None, hand
         Filter_destination_ip_null_values(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
         return
 
+    # call connected blocks for 'else' condition 2
+    filter_2(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
+
     return
 
 def join_high_positives(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None):
@@ -132,13 +135,19 @@ def Notify_IT(action=None, success=None, container=None, results=None, handle=No
     #responses:
     response_types = [
         {
-            "prompt": "",
+            "prompt": "Notify IT?",
             "options": {
                 "type": "list",
                 "choices": [
                     "Yes",
                     "No",
                 ]
+            },
+        },
+        {
+            "prompt": "Comments",
+            "options": {
+                "type": "message",
             },
         },
     ]
@@ -184,13 +193,19 @@ def Prompt_timeout(action=None, success=None, container=None, results=None, hand
 
     # call connected blocks if condition 1 matched
     if matched:
-        decision_3(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
+        Event_promote(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
         return
+
+    # call connected blocks for 'else' condition 2
+    Prompt_timeout_api(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
 
     return
 
-def decision_3(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug('decision_3() called')
+"""
+Did we decide to promote the event?
+"""
+def Event_promote(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Event_promote() called')
 
     # check for 'if' condition 1
     matched = phantom.decision(
@@ -203,6 +218,84 @@ def decision_3(action=None, success=None, container=None, results=None, handle=N
     # call connected blocks if condition 1 matched
     if matched:
         return
+
+    # call connected blocks for 'else' condition 2
+    User_Declined(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
+
+    return
+
+def filter_2(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('filter_2() called')
+
+    # collect filtered artifact ids for 'if' condition 1
+    matched_artifacts_1, matched_results_1 = phantom.condition(
+        container=container,
+        action_results=results,
+        conditions=[
+            ["file_reputation_1:action_result.data.*.positives", "!=", ""],
+        ],
+        name="filter_2:condition_1")
+
+    # call connected blocks if filtered artifacts or results
+    if matched_artifacts_1 or matched_results_1:
+        Compose_comment(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_1, filtered_results=matched_results_1)
+
+    return
+
+"""
+Prepares the resolution comment
+"""
+def Compose_comment(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Compose_comment() called')
+    
+    template = """“Virus positives {0} are below threshold 10, closing event.”"""
+
+    # parameter list for template variable replacement
+    parameters = [
+        "filtered-data:filter_2:condition_1:file_reputation_1:action_result.data.*.positives",
+    ]
+
+    phantom.format(container=container, template=template, parameters=parameters, name="Compose_comment")
+
+    Risk_threshold_is_below(container=container)
+
+    return
+
+def Risk_threshold_is_below(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Risk_threshold_is_below() called')
+
+    formatted_data_1 = phantom.get_format_data(name='Compose_comment__as_list')
+
+    phantom.comment(container=container, comment=formatted_data_1)
+
+    return
+
+def Prompt_timeout_api(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Prompt_timeout_api() called')
+
+    phantom.pin(container=container, data="", message="\"Awaiting Action\"", pin_type="card", pin_style="red", name="Awaiting_Action_pin")
+
+    note_title = ""
+    note_content = ""
+    note_format = "markdown"
+    phantom.add_note(container=container, note_type="general", title=note_title, content=note_content, note_format=note_format)
+
+    phantom.comment(container=container, comment="“User failed to promote event within time limit.”")
+
+    phantom.set_status(container=container, status="Closed")
+
+    return
+
+def User_Declined(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('User_Declined() called')
+
+    results_data_1 = phantom.collect2(container=container, datapath=['Notify_IT:action_result.summary.responses.1'], action_results=results)
+
+    results_item_1_0 = [item[0] for item in results_data_1]
+
+    phantom.comment(container=container, comment=results_item_1_0)
+
+    phantom.set_status(container=container, status="Closed")
 
     return
 
