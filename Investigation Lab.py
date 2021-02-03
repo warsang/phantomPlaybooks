@@ -30,7 +30,30 @@ def geolocate_ip_1(action=None, success=None, container=None, results=None, hand
                 'context': {'artifact_id': container_item[1]},
             })
 
-    phantom.act(action="geolocate ip", parameters=parameters, assets=['maxmind'], name="geolocate_ip_1")
+    phantom.act(action="geolocate ip", parameters=parameters, assets=['maxmind'], callback=domain_reputation_2, name="geolocate_ip_1")
+
+    return
+
+def domain_reputation_2(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('domain_reputation_2() called')
+        
+    #phantom.debug('Action: {0} {1}'.format(action['name'], ('SUCCEEDED' if success else 'FAILED')))
+    
+    # collect data for 'domain_reputation_2' call
+    container_data = phantom.collect2(container=container, datapath=['artifact:*.cef.sourceDnsDomain', 'artifact:*.id'])
+
+    parameters = []
+    
+    # build parameters list for 'domain_reputation_2' call
+    for container_item in container_data:
+        if container_item[0]:
+            parameters.append({
+                'domain': container_item[0],
+                # context (artifact id) is added to associate results with the artifact
+                'context': {'artifact_id': container_item[1]},
+            })
+
+    phantom.act(action="domain reputation", parameters=parameters, assets=['virustotal'], name="domain_reputation_2", parent_action=action)
 
     return
 
