@@ -7,7 +7,7 @@
             "clean": true,
             "code_block": "",
             "description": "Investigation Lab Playbook",
-            "hash": "8f9741671375f5e1a6f80c3bebda71187fbd880c",
+            "hash": "44aa781c10d16d6f4f3cad30153e16c953254c12",
             "joint": {
                 "cells": [
                     {
@@ -6350,7 +6350,7 @@
                                 "display": "block"
                             }
                         },
-                        "block_code": "def Notify_IT(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):\n    phantom.debug('Notify_IT() called')\n    \n    # set user and message variables for phantom.prompt call\n    user = \"Administrator\"\n    message = \"\"\"A potentially malicious file download has been detected on a local server with IP address {0}. Notify IT team?{0}\"\"\"\n\n    # parameter list for template variable replacement\n    parameters = [\n        \"artifact:*.cef.destinationAddress\",\n    ]\n\n    #responses:\n    response_types = [\n        {\n            \"prompt\": \"Notify IT?\",\n            \"options\": {\n                \"type\": \"list\",\n                \"choices\": [\n                    \"Yes\",\n                    \"No\",\n                ]\n            },\n        },\n        {\n            \"prompt\": \"Comments\",\n            \"options\": {\n                \"type\": \"message\",\n            },\n        },\n    ]\n\n    phantom.prompt2(container=container, user=user, message=message, respond_in_mins=1, name=\"Notify_IT\", parameters=parameters, response_types=response_types, callback=Prompt_timeout)\n\n    return",
+                        "block_code": "def Notify_IT(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):\n    phantom.debug('Notify_IT() called')\n    \n    # set user and message variables for phantom.prompt call\n    user = \"Administrator\"\n    message = \"\"\"A potentially malicious file download has been detected on a local server with IP address {0}. Notify IT team?{0}\"\"\"\n\n    # parameter list for template variable replacement\n    parameters = [\n        \"artifact:*.cef.destinationAddress\",\n    ]\n\n    #responses:\n    response_types = [\n        {\n            \"prompt\": \"Notify IT?\",\n            \"options\": {\n                \"type\": \"list\",\n                \"choices\": [\n                    \"Yes\",\n                    \"No\",\n                ]\n            },\n        },\n        {\n            \"prompt\": \"Comments\",\n            \"options\": {\n                \"type\": \"message\",\n            },\n        },\n    ]\n\n    phantom.prompt2(container=container, user=user, message=message, respond_in_mins=10, name=\"Notify_IT\", parameters=parameters, response_types=response_types, callback=Prompt_timeout)\n\n    return",
                         "callback_code": "",
                         "callback_start": 152,
                         "callsback": true,
@@ -6448,7 +6448,7 @@
                         },
                         "previous_function": "",
                         "previous_name": "Notify_IT",
-                        "respond_in": "1",
+                        "respond_in": "10",
                         "response_key": "Message",
                         "response_options": [],
                         "response_type": "list",
@@ -6488,7 +6488,7 @@
         "schema": 4,
         "version": "4.10.0.40961"
     },
-    "create_time": "2021-02-03T17:29:39.824277+00:00",
+    "create_time": "2021-02-03T17:35:35.027414+00:00",
     "draft_mode": false,
     "labels": [
         "*"
