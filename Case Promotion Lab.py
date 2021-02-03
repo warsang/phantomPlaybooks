@@ -8,44 +8,117 @@ from datetime import datetime, timedelta
 def on_start(container):
     phantom.debug('on_start() called')
     
-    # call 'call_api_1' block
-    call_api_1(container=container)
+    # call 'promote_to_case_1' block
+    promote_to_case_1(container=container)
 
     return
 
-def call_api_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug('call_api_1() called')
-    
-    filter_1(container=container)
+def promote_to_case_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('promote_to_case_1() called')
+
+    phantom.promote(container=container, template="Data Breach")
+    Fixed_sourceDNS(container=container)
 
     return
 
-def filter_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug('filter_1() called')
+def Fixed_sourceDNS(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Fixed_sourceDNS() called')
+
+    # collect filtered artifact ids for 'if' condition 1
+    matched_artifacts_1, matched_results_1 = phantom.condition(
+        container=container,
+        conditions=[
+            ["artifact:*.cef.sourceDnsDomain", "!=", ""],
+        ],
+        name="Fixed_sourceDNS:condition_1")
+
+    # call connected blocks if filtered artifacts or results
+    if matched_artifacts_1 or matched_results_1:
+        Fixed_File_Path(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_1, filtered_results=matched_results_1)
 
     return
 
-def filter_2(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug('filter_2() called')
+def Fixed_File_Path(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Fixed_File_Path() called')
+
+    # collect filtered artifact ids for 'if' condition 1
+    matched_artifacts_1, matched_results_1 = phantom.condition(
+        container=container,
+        conditions=[
+            ["filtered-data:Fixed_sourceDNS:condition_1:artifact:*.cef.filePath", "!=", ""],
+        ],
+        name="Fixed_File_Path:condition_1")
+
+    # call connected blocks if filtered artifacts or results
+    if matched_artifacts_1 or matched_results_1:
+        Fixed_Address(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_1, filtered_results=matched_results_1)
 
     return
 
-def filter_3(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
-    phantom.debug('filter_3() called')
+def Fixed_Address(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Fixed_Address() called')
+
+    # collect filtered artifact ids for 'if' condition 1
+    matched_artifacts_1, matched_results_1 = phantom.condition(
+        container=container,
+        conditions=[
+            ["filtered-data:Fixed_File_Path:condition_1:artifact:*.cef.destinationAddress", "!=", ""],
+        ],
+        name="Fixed_Address:condition_1")
+
+    # call connected blocks if filtered artifacts or results
+    if matched_artifacts_1 or matched_results_1:
+        format_1(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_1, filtered_results=matched_results_1)
 
     return
 
 def format_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
     phantom.debug('format_1() called')
     
-    template = """{0}"""
+    template = """A file has been detected that has been determined to be potentially malicious. A case has been opened.
+
+Case link: {0}
+{5}{4}{3}{2}{1}Event Name: {1} Description: {2}
+Source URL: {3}
+Target Server IP: {4} Suspicious File Path: {5}"""
 
     # parameter list for template variable replacement
     parameters = [
-        "",
+        "container:url",
+        "container:name",
+        "container:description",
+        "filtered-data:Fixed_sourceDNS:condition_1:artifact:*.cef.sourceDnsDomain",
+        "filtered-data:Fixed_Address:condition_1:artifact:*.cef.destinationAddress",
+        "filtered-data:Fixed_File_Path:condition_1:artifact:*.cef.filePath",
     ]
 
     phantom.format(container=container, template=template, parameters=parameters, name="format_1")
+
+    send_email_1(container=container)
+
+    return
+
+def send_email_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('send_email_1() called')
+
+    # collect data for 'send_email_1' call
+    formatted_data_1 = phantom.get_format_data(name='format_1')
+
+    parameters = []
+    
+    # build parameters list for 'send_email_1' call
+    parameters.append({
+        'from': "edu-labserver@splunk.com",
+        'to': "warsang@amazon.com",
+        'cc': "",
+        'bcc': "",
+        'subject': "New Case Created",
+        'body': formatted_data_1,
+        'attachments': "",
+        'headers': "",
+    })
+
+    phantom.act(action="send email", parameters=parameters, assets=['smtp'], name="send_email_1")
 
     return
 
