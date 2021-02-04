@@ -384,6 +384,10 @@ def Format_Origin_country_Name_comment(action=None, success=None, container=None
 def Add_comment_Low_risk(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
     phantom.debug('Add_comment_Low_risk() called')
 
+    formatted_data_1 = phantom.get_format_data(name='Format_Origin_country_Name_comment__as_list')
+
+    phantom.comment(container=container, comment=formatted_data_1)
+
     return
 
 def pin_5(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
