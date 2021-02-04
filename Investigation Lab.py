@@ -17,6 +17,9 @@ def on_start(container):
     # call 'file_reputation_1' block
     file_reputation_1(container=container)
 
+    # call 'playbook_phantomPlaybooks_Log_File_Hashes_1' block
+    playbook_phantomPlaybooks_Log_File_Hashes_1(container=container)
+
     return
 
 def geolocate_ip_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
@@ -399,6 +402,14 @@ def pin_5(action=None, success=None, container=None, results=None, handle=None, 
 
     phantom.pin(container=container, data=filtered_results_item_1_0, message="There was a hit on the following Country!", pin_type="card", pin_style="red", name="Block Country List")
     high_positives(container=container)
+
+    return
+
+def playbook_phantomPlaybooks_Log_File_Hashes_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('playbook_phantomPlaybooks_Log_File_Hashes_1() called')
+    
+    # call playbook "phantomPlaybooks/Log File Hashes", returns the playbook_run_id
+    playbook_run_id = phantom.playbook(playbook="phantomPlaybooks/Log File Hashes", container=container)
 
     return
 
