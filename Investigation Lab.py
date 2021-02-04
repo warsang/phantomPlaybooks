@@ -36,7 +36,7 @@ def geolocate_ip_1(action=None, success=None, container=None, results=None, hand
                 'context': {'artifact_id': container_item[1]},
             })
 
-    phantom.act(action="geolocate ip", parameters=parameters, assets=['maxmind'], callback=join_high_positives, name="geolocate_ip_1")
+    phantom.act(action="geolocate ip", parameters=parameters, assets=['maxmind'], callback=join_filter_3, name="geolocate_ip_1")
 
     return
 
@@ -57,7 +57,7 @@ def domain_reputation_2(action=None, success=None, container=None, results=None,
                 'context': {'artifact_id': container_item[1]},
             })
 
-    phantom.act(action="domain reputation", parameters=parameters, assets=['virustotal'], callback=join_high_positives, name="domain_reputation_2")
+    phantom.act(action="domain reputation", parameters=parameters, assets=['virustotal'], callback=join_filter_3, name="domain_reputation_2")
 
     return
 
@@ -78,7 +78,7 @@ def file_reputation_1(action=None, success=None, container=None, results=None, h
                 'context': {'artifact_id': container_item[1]},
             })
 
-    phantom.act(action="file reputation", parameters=parameters, assets=['virustotal'], callback=join_high_positives, name="file_reputation_1")
+    phantom.act(action="file reputation", parameters=parameters, assets=['virustotal'], callback=join_filter_3, name="file_reputation_1")
 
     return
 
@@ -104,17 +104,6 @@ def high_positives(action=None, success=None, container=None, results=None, hand
     # call connected blocks for 'else' condition 2
     filter_2(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function)
 
-    return
-
-def join_high_positives(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None):
-    phantom.debug('join_high_positives() called')
-
-    # check if all connected incoming playbooks, actions, or custom functions are done i.e. have succeeded or failed
-    if phantom.completed(action_names=['domain_reputation_2', 'geolocate_ip_1', 'file_reputation_1']):
-        
-        # call connected block "high_positives"
-        high_positives(container=container, handle=handle)
-    
     return
 
 """
@@ -320,17 +309,92 @@ def add_artifact_1(action=None, success=None, container=None, results=None, hand
     # build parameters list for 'add_artifact_1' call
     parameters.append({
         'name': "Promote Reason",
-        'container_id': "",
         'label': "event",
-        'source_data_identifier': "Investigation lab",
         'cef_name': "reason",
-        'cef_value': "the text message entered by the IT team in the user prompt",
-        'cef_dictionary': "",
         'contains': "",
+        'cef_value': "the text message entered by the IT team in the user prompt",
+        'container_id': "",
+        'cef_dictionary': "",
         'run_automation': False,
+        'source_data_identifier': "Investigation lab",
     })
 
     phantom.act(action="add artifact", parameters=parameters, assets=['phantom'], callback=Promote_to_Case, name="add_artifact_1")
+
+    return
+
+def filter_3(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('filter_3() called')
+
+    # collect filtered artifact ids for 'if' condition 1
+    matched_artifacts_1, matched_results_1 = phantom.condition(
+        container=container,
+        action_results=results,
+        conditions=[
+            ["geolocate_ip_1:action_result.data.*.country_name", "in", "custom_list:Banned Countries"],
+        ],
+        name="filter_3:condition_1")
+
+    # call connected blocks if filtered artifacts or results
+    if matched_artifacts_1 or matched_results_1:
+        pin_5(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_1, filtered_results=matched_results_1)
+
+    # collect filtered artifact ids for 'if' condition 2
+    matched_artifacts_2, matched_results_2 = phantom.condition(
+        container=container,
+        action_results=results,
+        conditions=[
+            ["geolocate_ip_1:action_result.data.*.country_name", "not in", "custom_list:Banned Countries"],
+        ],
+        name="filter_3:condition_2")
+
+    # call connected blocks if filtered artifacts or results
+    if matched_artifacts_2 or matched_results_2:
+        Format_Origin_country_Name_comment(action=action, success=success, container=container, results=results, handle=handle, custom_function=custom_function, filtered_artifacts=matched_artifacts_2, filtered_results=matched_results_2)
+
+    return
+
+def join_filter_3(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None):
+    phantom.debug('join_filter_3() called')
+
+    # check if all connected incoming playbooks, actions, or custom functions are done i.e. have succeeded or failed
+    if phantom.completed(action_names=['geolocate_ip_1', 'domain_reputation_2', 'file_reputation_1']):
+        
+        # call connected block "filter_3"
+        filter_3(container=container, handle=handle)
+    
+    return
+
+def Format_Origin_country_Name_comment(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Format_Origin_country_Name_comment() called')
+    
+    template = """Origin country {0} is low risk, closing event."""
+
+    # parameter list for template variable replacement
+    parameters = [
+        "filtered-data:filter_3:condition_2:geolocate_ip_1:action_result.data.*.country_name",
+    ]
+
+    phantom.format(container=container, template=template, parameters=parameters, name="Format_Origin_country_Name_comment")
+
+    Add_comment_Low_risk(container=container)
+
+    return
+
+def Add_comment_Low_risk(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('Add_comment_Low_risk() called')
+
+    return
+
+def pin_5(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):
+    phantom.debug('pin_5() called')
+
+    filtered_results_data_1 = phantom.collect2(container=container, datapath=['filtered-data:filter_3:condition_1:geolocate_ip_1:action_result.data.*.country_name'])
+
+    filtered_results_item_1_0 = [item[0] for item in filtered_results_data_1]
+
+    phantom.pin(container=container, data=filtered_results_item_1_0, message="There was a hit on the following Country!", pin_type="card", pin_style="red", name="Block Country List")
+    high_positives(container=container)
 
     return
 
