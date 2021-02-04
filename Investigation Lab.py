@@ -114,11 +114,11 @@ def Notify_IT(action=None, success=None, container=None, results=None, handle=No
     
     # set user and message variables for phantom.prompt call
     user = "Administrator"
-    message = """A potentially malicious file download has been detected on a local server with IP address {0}. Notify IT team?{0}"""
+    message = """A potentially malicious file download has been detected on a local server with IP address {0}. Notify IT team?"""
 
     # parameter list for template variable replacement
     parameters = [
-        "artifact:*.cef.destinationAddress",
+        "filtered-data:Filter_destination_ip_null_values:condition_1:artifact:*.cef.destinationAddress",
     ]
 
     #responses:
