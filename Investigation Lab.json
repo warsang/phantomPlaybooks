@@ -7,7 +7,6 @@
             "clean": true,
             "code_block": "",
             "description": "Investigation Lab Playbook",
-            "hash": "b29047c26bf7fe744412133ae20ee51d39b0145f",
             "joint": {
                 "cells": [
                     {
@@ -8247,7 +8246,7 @@
                         "callback_code": "# read-only block view not available",
                         "callback_start": 1,
                         "callsback": false,
-                        "connected_to_start": false,
+                        "connected_to_start": true,
                         "connection_name": "",
                         "connection_type": "",
                         "custom_callback": "",
@@ -8430,6 +8429,9 @@
                             "g.branch image": {
                                 "opacity": 1
                             },
+                            "g.code image": {
+                                "opacity": 1
+                            },
                             "g.delete": {
                                 "display": "none"
                             },
@@ -8438,6 +8440,9 @@
                             },
                             "g.notes": {
                                 "display": "block"
+                            },
+                            "g.notes image": {
+                                "opacity": 1
                             }
                         },
                         "block_code": "def playbook_phantomPlaybooks_Log_File_Hashes_1(action=None, success=None, container=None, results=None, handle=None, filtered_artifacts=None, filtered_results=None, custom_function=None, **kwargs):\n    phantom.debug('playbook_phantomPlaybooks_Log_File_Hashes_1() called')\n    \n    # call playbook \"phantomPlaybooks/Log File Hashes\", returns the playbook_run_id\n    playbook_run_id = phantom.playbook(playbook=\"phantomPlaybooks/Log File Hashes\", container=container)\n\n    return",
@@ -8531,7 +8536,7 @@
                             "y": -240
                         },
                         "previous_function": "",
-                        "previous_name": "playbook_phantomPlaybooks_Investigation_Lab_1",
+                        "previous_name": "playbook_phantomPlaybooks_Log_File_Hashes_1",
                         "scmName": "phantomPlaybooks",
                         "show_number": false,
                         "size": {
@@ -8556,7 +8561,7 @@
     "create_time": "2021-02-04T15:06:28.060256+00:00",
     "draft_mode": false,
     "labels": [
-        "*"
+        "file download"
     ],
     "tags": []
 }
